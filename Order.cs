@@ -18,7 +18,9 @@ public class Order
         Description = description;
         Status = OrderStatus.Новый;
         CreationDate = creationDate;
-    }    public void UpdateStatus(OrderStatus newStatus)
+    }
+
+    public void UpdateStatus(OrderStatus newStatus)
     {
         Status = newStatus;
     }

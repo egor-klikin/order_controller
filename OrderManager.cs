@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-
 public class OrderManager
 {
     public List<Order> Orders { get; private set; }

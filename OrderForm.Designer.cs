@@ -1,6 +1,6 @@
 ﻿namespace order_controller
 {
-    partial class Form1
+    partial class OrderForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
