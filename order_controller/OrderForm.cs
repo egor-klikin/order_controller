@@ -10,7 +10,9 @@ namespace order_controller
         private TextBox customerNameTextBox;
         private Label descriptionLabel;
         private TextBox descriptionTextBox;
+        private Label dateLabel;
         private DateTimePicker creationDatePicker;
+        private Label statusLabel;
         private ComboBox statusComboBox;
         private Button addOrderButton;
         private Button removeOrderButton;
@@ -41,6 +43,11 @@ namespace order_controller
                 Location = new System.Drawing.Point(170, 40),
                 Width = 200
             };
+            dateLabel = new Label
+            {
+                Location = new System.Drawing.Point(380, 10),
+                Text = "Дата заказа"
+            };
             creationDatePicker = new DateTimePicker
             {
                 Location = new System.Drawing.Point(380, 40)
@@ -66,15 +73,20 @@ namespace order_controller
                 Width = 120
             };
             updateStatusButton.Click += UpdateStatusButton_Click;
+            statusLabel = new Label 
+            {
+                Location = new System.Drawing.Point(350, 70),
+                Text = "Статус"
+            };
             statusComboBox = new ComboBox
             {
-                Location = new System.Drawing.Point(340, 70),
+                Location = new System.Drawing.Point(350, 100),
                 Width = 100,
                 Items = { "Новый", "В обработке", "Завершён" }
             };
             ordersListBox = new ListBox
             {
-                Location = new System.Drawing.Point(10, 100),
+                Location = new System.Drawing.Point(10, 130),
                 Width = 560,
                 Height = 300
             };
@@ -82,10 +94,12 @@ namespace order_controller
             this.Controls.Add(customerNameLabel);
             this.Controls.Add(descriptionTextBox);
             this.Controls.Add(descriptionLabel);
+            this.Controls.Add(dateLabel);
             this.Controls.Add(creationDatePicker);
             this.Controls.Add(addOrderButton);
             this.Controls.Add(removeOrderButton);
             this.Controls.Add(updateStatusButton);
+            this.Controls.Add(statusLabel);
             this.Controls.Add(statusComboBox);
             this.Controls.Add(ordersListBox);
             orderManager = new OrderManager();

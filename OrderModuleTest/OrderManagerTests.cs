@@ -8,7 +8,7 @@ namespace OrderModuleTest
     public class OrderManagerTests
     {
         [TestMethod]
-        public void OrderManagerConstructor_Test1()
+        public void OrderManagerConstructor_Test1() // тест для конструктора
         {
             OrderManager manager = new OrderManager();
 
@@ -17,7 +17,7 @@ namespace OrderModuleTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void OrderManagerAddNullOrder_Test1()
+        public void OrderManagerAddNullOrder_Test1() // тест для проверки выкидывания исключения при попытки добавления null-заказа
         {
             OrderManager manager = new OrderManager();
 
@@ -25,7 +25,7 @@ namespace OrderModuleTest
         }
 
         [TestMethod]
-        public void OrderManagerAddOrder_Test2()
+        public void OrderManagerAddOrder_Test2() // тест для проверки успешного добавления заказа
         {
             string name = "Роман";
             string description = "2 пачки кофе";
@@ -43,7 +43,7 @@ namespace OrderModuleTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void OrderManagerRemoveNullOrder_Test1()
+        public void OrderManagerRemoveNullOrder_Test1() // тест для проверки выкидывания исключения при попытки удаления null-заказа
         {
 
             OrderManager manager = new OrderManager();
@@ -52,7 +52,7 @@ namespace OrderModuleTest
         }
 
         [TestMethod]
-        public void OrderManagerRemoveOrder_Test2()
+        public void OrderManagerRemoveOrder_Test2() // тест для проверки успешного удаления заказа
         {
             string name1 = "Роман";
             string description1 = "2 пачки кофе";
@@ -74,7 +74,7 @@ namespace OrderModuleTest
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void OrderManagerUpdateNullOrder_Test1()
+        public void OrderManagerUpdateNullOrder_Test1() // тест для проверки выкидывания исключения при попытки обноления статуса у null-заказа
         {
             OrderManager manager = new OrderManager();
 
@@ -82,7 +82,7 @@ namespace OrderModuleTest
         }
 
         [TestMethod]
-        public void OrderManagerUpdateOrder_Test2()
+        public void OrderManagerUpdateOrder_Test2() // тест для проверки успешного обновления статуса заказа
         {
             string name = "Роман";
             string description = "2 пачки кофе";

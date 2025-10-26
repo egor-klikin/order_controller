@@ -43,7 +43,7 @@ namespace order_controller
         private void SaveOrders()
         {
             File.WriteAllLines("orders.txt", Orders.Select(o =>
-            $"{o.CustomerName}|{o.Description}|{(int)o.Status}|{o.CreationDate.ToString("yyyy-MM-dd HH: mm:ss")}"));
+            $"{o.CustomerName}|{o.Description}|{(int)o.Status}|{o.CreationDate.ToString("yyyy-MM-dd HH:mm:ss")}"));
         }
         private void LoadOrders()
         {
