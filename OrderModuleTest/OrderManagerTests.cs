@@ -1,0 +1,100 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using order_controller;
+
+namespace OrderModuleTest
+{
+    [TestClass]
+    public class OrderManagerTests
+    {
+        [TestMethod]
+        public void OrderManagerConstructor_Test1()
+        {
+            OrderManager manager = new OrderManager();
+
+            Assert.IsNotNull(manager);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void OrderManagerAddNullOrder_Test1()
+        {
+            OrderManager manager = new OrderManager();
+
+            manager.AddOrder(null);
+        }
+
+        [TestMethod]
+        public void OrderManagerAddOrder_Test2()
+        {
+            string name = "Роман";
+            string description = "2 пачки кофе";
+            DateTime dateTime = DateTime.Now;
+            OrderManager manager = new OrderManager();
+            Order order = new Order(name, description, dateTime);
+
+            manager.AddOrder(order);
+
+            Assert.IsNotNull(manager.Orders.Find(x => x.CreationDate == dateTime));
+            Assert.AreEqual(name, manager.Orders.Find(x => x.CreationDate == dateTime).CustomerName);
+            Assert.AreEqual(description, manager.Orders.Find(x => x.CreationDate == dateTime).Description);
+            Assert.AreEqual(dateTime, manager.Orders.Find(x => x.CreationDate == dateTime).CreationDate);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void OrderManagerRemoveNullOrder_Test1()
+        {
+
+            OrderManager manager = new OrderManager();
+
+            manager.RemoveOrder(null);
+        }
+
+        [TestMethod]
+        public void OrderManagerRemoveOrder_Test2()
+        {
+            string name1 = "Роман";
+            string description1 = "2 пачки кофе";
+            DateTime dateTime1 = new DateTime(2025, 10, 12);
+            string name2 = "Марк";
+            string description2 = "2 пачки конфет";
+            DateTime dateTime2 = new DateTime(2022, 12, 12);
+            Order order1 = new Order(name1, description1, dateTime1);
+            Order order2 = new Order(name2, description2, dateTime2);
+            OrderManager manager = new OrderManager();
+
+            manager.AddOrder(order1);
+            manager.AddOrder(order2);
+            manager.RemoveOrder(order1);
+
+            Assert.AreEqual(-1, manager.Orders.FindIndex(x => x.CreationDate == dateTime1));
+            Assert.AreEqual(-1, manager.Orders.FindIndex(x => x.CreationDate == dateTime1));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void OrderManagerUpdateNullOrder_Test1()
+        {
+            OrderManager manager = new OrderManager();
+
+            manager.UpdateOrderStatus(null, OrderStatus.Завершён);
+        }
+
+        [TestMethod]
+        public void OrderManagerUpdateOrder_Test2()
+        {
+            string name = "Роман";
+            string description = "2 пачки кофе";
+            DateTime dateTime = DateTime.Now;
+            OrderManager manager = new OrderManager();
+            Order order = new Order(name, description, dateTime);
+            OrderStatus newStatus = OrderStatus.В_обработке;
+
+            manager.AddOrder(order);
+            manager.UpdateOrderStatus(order, newStatus);
+
+            Assert.AreEqual(newStatus, manager.Orders.Find(x => x.CreationDate == dateTime).Status);
+        }
+    }
+}

@@ -1,27 +1,30 @@
 ﻿using System;
 
-public enum OrderStatus
+namespace order_controller 
 {
-    Новый,
-    В_обработке,
-    Завершён
-}
-public class Order
-{
-    public string CustomerName { get; set; }
-    public string Description { get; set; }
-    public OrderStatus Status { get; set; }
-    public DateTime CreationDate { get; set; }
-    public Order(string customerName, string description, DateTime creationDate)
+    public enum OrderStatus
     {
-        CustomerName = customerName;
-        Description = description;
-        Status = OrderStatus.Новый;
-        CreationDate = creationDate;
+        Новый,
+        В_обработке,
+        Завершён
     }
-
-    public void UpdateStatus(OrderStatus newStatus)
+    public class Order
     {
-        Status = newStatus;
+        public string CustomerName { get; set; }
+        public string Description { get; set; }
+        public OrderStatus Status { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Order(string customerName, string description, DateTime creationDate)
+        {
+            CustomerName = customerName;
+            Description = description;
+            Status = OrderStatus.Новый;
+            CreationDate = creationDate;
+        }
+
+        public void UpdateStatus(OrderStatus newStatus)
+        {
+            Status = newStatus;
+        }
     }
 }
