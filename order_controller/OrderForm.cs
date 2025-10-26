@@ -82,7 +82,8 @@ namespace order_controller
             {
                 Location = new System.Drawing.Point(350, 100),
                 Width = 100,
-                Items = { "Новый", "В обработке", "Завершён" }
+                Items = { "Новый", "В обработке", "Завершён" },
+                DropDownStyle = ComboBoxStyle.DropDownList
             };
             ordersListBox = new ListBox
             {
@@ -110,7 +111,7 @@ namespace order_controller
             ordersListBox.Items.Clear();
             foreach (var order in orderManager.Orders)
             {
-                ordersListBox.Items.Add($"{order.CustomerName} - {order.Description} ({ order.Status})");
+                ordersListBox.Items.Add($"{order.CustomerName} - {order.Description} ({ order.Status}) {order.CreationDate}");
             }
         }
         private void AddOrderButton_Click(object sender, EventArgs e)
@@ -144,24 +145,26 @@ namespace order_controller
                 return;
             }
             string selectedItem = ordersListBox.SelectedItem.ToString();
-            string[] parts = selectedItem.Split(new[] { '-' }, StringSplitOptions.None);
+            string[] parts = selectedItem.Split(new[] { '-', '(', ')' }, StringSplitOptions.None);
             if (parts.Length >= 2)
             {
                 string customerName = parts[0].Trim();
                 string description = parts[1].Trim();
-                var orderToRemove = orderManager.Orders.Find(o => o.CustomerName ==
-                customerName && o.Description == description);
-                if (orderToRemove != null)
+                try
                 {
-                    try
+                    DateTime creationDate;
+                    if (!DateTime.TryParse(parts[3].Trim(), out creationDate)) throw new Exception("Ошибка формата даты!");
+                    var orderToRemove = orderManager.Orders.Find(o => o.CustomerName ==
+                    customerName && o.Description == description && o.CreationDate == creationDate);
+                    if (orderToRemove != null)
                     {
                         orderManager.RemoveOrder(orderToRemove);
                         UpdateOrdersList();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -172,27 +175,33 @@ namespace order_controller
                 MessageBox.Show("Выберите заказ для обновления статуса!");
                 return;
             }
+            if (statusComboBox.SelectedIndex == -1) 
+            {
+                MessageBox.Show("Выберите статус для обновления статуса заказа!");
+                return;
+            }
             string selectedItem = ordersListBox.SelectedItem.ToString();
-            string[] parts = selectedItem.Split(new[] { '-' }, StringSplitOptions.None);
+            string[] parts = selectedItem.Split(new[] { '-', '(', ')' }, StringSplitOptions.None);
             if (parts.Length >= 2)
             {
                 string customerName = parts[0].Trim();
                 string description = parts[1].Trim();
-                var orderToUpdate = orderManager.Orders.Find(o => o.CustomerName ==
-                customerName && o.Description == description);
-                if (orderToUpdate != null)
+                try
                 {
-                    OrderStatus newStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus),
-                    statusComboBox.SelectedItem.ToString());
-                    try
+                    DateTime creationDate;
+                    if (!DateTime.TryParse(parts[3].Trim(), out creationDate)) throw new Exception("Ошибка формата даты!");
+                    var orderToUpdate = orderManager.Orders.Find(o => o.CustomerName == customerName && o.Description == description && o.CreationDate == creationDate);
+                    if (orderToUpdate != null)
                     {
-                        orderManager.UpdateOrderStatus(orderToUpdate, newStatus);
-                        UpdateOrdersList();
+                        string str_status = statusComboBox.SelectedItem.ToString().Trim().Replace(' ', '_');
+                        OrderStatus newStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), str_status);
+                            orderManager.UpdateOrderStatus(orderToUpdate, newStatus);
+                            UpdateOrdersList();
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
