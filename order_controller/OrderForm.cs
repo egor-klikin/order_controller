@@ -6,6 +6,7 @@ namespace order_controller
     public partial class OrderForm : Form
     {
         private OrderManager orderManager;
+        private NotificationManager notificationManager;
         private Label customerNameLabel;
         private TextBox customerNameTextBox;
         private Label descriptionLabel;
@@ -18,10 +19,13 @@ namespace order_controller
         private Button removeOrderButton;
         private Button updateStatusButton;
         private ListBox ordersListBox;
+        private Label notificationLabel;
+        private CheckBox notifyOnInProgressCheckbox;
+        private CheckBox notifyOnCompletedCheckbox;
         public OrderForm()
         {
             this.Text = "Управление заказами";
-            this.Width = 600;
+            this.Width = 800;
             this.Height = 500;
             customerNameLabel = new Label
             {
@@ -91,6 +95,29 @@ namespace order_controller
                 Width = 560,
                 Height = 300
             };
+            notificationLabel = new Label
+            {
+                Text = "Включить уведомления для статусов: ",
+                Location = new System.Drawing.Point(460, 70),
+                Width = 300,
+            };
+            notifyOnInProgressCheckbox = new CheckBox
+            {
+                Location = new System.Drawing.Point(460, 90),
+                Text = "В обработке",
+                Width = 100,
+                Checked = true,
+            };
+            notifyOnInProgressCheckbox.Click += notifyOnInProgressCheckbox_Click;
+
+            notifyOnCompletedCheckbox = new CheckBox
+            {
+                Location = new System.Drawing.Point(560, 90),
+                Text = "Завершен",
+                Checked = true,
+            };
+            notifyOnCompletedCheckbox.Click += notifyOnCompletedCheckbox_Click;
+
             this.Controls.Add(customerNameTextBox);
             this.Controls.Add(customerNameLabel);
             this.Controls.Add(descriptionTextBox);
@@ -103,7 +130,11 @@ namespace order_controller
             this.Controls.Add(statusLabel);
             this.Controls.Add(statusComboBox);
             this.Controls.Add(ordersListBox);
+            this.Controls.Add(notificationLabel);
+            this.Controls.Add(notifyOnInProgressCheckbox);
+            this.Controls.Add(notifyOnCompletedCheckbox);
             orderManager = new OrderManager();
+            notificationManager  = new NotificationManager();
             UpdateOrdersList();
         }
         private void UpdateOrdersList()
@@ -193,10 +224,18 @@ namespace order_controller
                     var orderToUpdate = orderManager.Orders.Find(o => o.CustomerName == customerName && o.Description == description && o.CreationDate == creationDate);
                     if (orderToUpdate != null)
                     {
+                        OrderStatus oldStatus = orderToUpdate.Status;
                         string str_status = statusComboBox.SelectedItem.ToString().Trim().Replace(' ', '_');
                         OrderStatus newStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), str_status);
                             orderManager.UpdateOrderStatus(orderToUpdate, newStatus);
                             UpdateOrdersList();
+                        
+                        string message = notificationManager.NotifyStatusChange(orderToUpdate, newStatus);
+                        
+                        if (message != string.Empty)
+                        {
+                            MessageBox.Show(message, "Изменение в статусе заказа");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -204,6 +243,15 @@ namespace order_controller
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+        private void notifyOnInProgressCheckbox_Click(object sender, EventArgs e)
+        {
+            notificationManager.NotifyOnInProgress = !notificationManager.NotifyOnInProgress;
+        }
+
+        private void notifyOnCompletedCheckbox_Click(object sender, EventArgs e)
+        {
+            notificationManager.NotifyOnCompleted = !notificationManager.NotifyOnCompleted;
         }
     }
 }
