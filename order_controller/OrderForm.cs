@@ -227,14 +227,17 @@ namespace order_controller
                         OrderStatus oldStatus = orderToUpdate.Status;
                         string str_status = statusComboBox.SelectedItem.ToString().Trim().Replace(' ', '_');
                         OrderStatus newStatus = (OrderStatus)Enum.Parse(typeof(OrderStatus), str_status);
+                        if (oldStatus != newStatus)
+                        {
                             orderManager.UpdateOrderStatus(orderToUpdate, newStatus);
                             UpdateOrdersList();
-                        
-                        string message = notificationManager.NotifyStatusChange(orderToUpdate, newStatus);
-                        
-                        if (message != string.Empty)
-                        {
-                            MessageBox.Show(message, "Изменение в статусе заказа");
+
+                            string message = notificationManager.NotifyStatusChange(orderToUpdate, oldStatus, newStatus);
+
+                            if (message != string.Empty)
+                            {
+                                MessageBox.Show(message, "Изменение в статусе заказа");
+                            }
                         }
                     }
                 }

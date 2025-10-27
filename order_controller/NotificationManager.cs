@@ -7,16 +7,19 @@
 
         public NotificationManager() { }
 
-        public string NotifyStatusChange(Order order, OrderStatus newStatus)
+        public string NotifyStatusChange(Order order, OrderStatus oldStatus, OrderStatus newStatus)
         {
             string message = "";
 
-            if (newStatus == OrderStatus.Завершён && NotifyOnCompleted)
+            if (oldStatus != newStatus)
             {
-                message = $"Заказ '{order.CustomerName} - {order.Description} {order.CreationDate}' завершен";
-            } else if (newStatus == OrderStatus.В_обработке && NotifyOnInProgress)
-            {
-                message = $"Заказ '{order.CustomerName} - {order.Description} {order.CreationDate}' взят в обработку";
+                if (newStatus == OrderStatus.Завершён && NotifyOnCompleted)
+                {
+                    message = $"Заказ '{order.CustomerName} - {order.Description} {order.CreationDate}' завершен";
+                } else if (newStatus == OrderStatus.В_обработке && NotifyOnInProgress)
+                {
+                    message = $"Заказ '{order.CustomerName} - {order.Description} {order.CreationDate}' взят в обработку";
+                }
             }
 
             return message; 

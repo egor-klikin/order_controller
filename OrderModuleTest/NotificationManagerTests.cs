@@ -26,7 +26,7 @@ namespace OrderModuleTest
             Order order = new Order(name, description, dateTime);
 
             order.UpdateStatus(newStatus);
-            string message = manager.NotifyStatusChange(order, newStatus);
+            string message = manager.NotifyStatusChange(order, OrderStatus.Новый,  newStatus);
 
             Assert.IsNotNull(message);
             Assert.IsTrue(message.Contains(name));
@@ -46,7 +46,7 @@ namespace OrderModuleTest
             Order order = new Order(name, description, dateTime);
 
             order.UpdateStatus(newStatus);
-            string message = manager.NotifyStatusChange(order, newStatus);
+            string message = manager.NotifyStatusChange(order, OrderStatus.Новый, newStatus);
 
             Assert.IsNotNull(message);
             Assert.IsTrue(message.Contains(name));
@@ -65,8 +65,9 @@ namespace OrderModuleTest
             OrderStatus newStatus = OrderStatus.В_обработке;
             Order order = new Order(name, description, dateTime);
 
+            manager.NotifyOnInProgress = false;
             order.UpdateStatus(newStatus);
-            string message = manager.NotifyStatusChange(order, newStatus);
+            string message = manager.NotifyStatusChange(order, OrderStatus.Новый, newStatus);
 
             Assert.IsNotNull(message);
             Assert.AreEqual(message, "");
@@ -82,8 +83,9 @@ namespace OrderModuleTest
             OrderStatus newStatus = OrderStatus.Завершён;
             Order order = new Order(name, description, dateTime);
 
+            manager.NotifyOnCompleted = false;
             order.UpdateStatus(newStatus);
-            string message = manager.NotifyStatusChange(order, newStatus);
+            string message = manager.NotifyStatusChange(order, OrderStatus.Новый, newStatus);
 
             Assert.IsNotNull(message);
             Assert.AreEqual(message, "");
@@ -106,5 +108,23 @@ namespace OrderModuleTest
 
             Assert.IsFalse(manager.NotifyOnCompleted);
         }
-    }
+
+        [TestMethod]
+        public void NotificationManagerChangeOnTheSameStatus_Test() // тест для проверки возвращения пустой строки при обновлении статуса на тот же самый
+        {
+            NotificationManager manager = new NotificationManager();
+            string name = "Роман";
+            string description = "2 пачки кофе";
+            DateTime dateTime = DateTime.Now;
+            OrderStatus newStatus = OrderStatus.Завершён;
+            Order order = new Order(name, description, dateTime);
+
+            order.UpdateStatus(newStatus);
+            order.UpdateStatus(newStatus);
+            string message = manager.NotifyStatusChange(order, newStatus, newStatus);
+
+            Assert.IsNotNull(message);
+            Assert.AreEqual(message, "");
+        }
+     }
 }
